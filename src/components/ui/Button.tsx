@@ -1,47 +1,38 @@
-import styled from "@emotion/styled/macro";
+import styled from "@emotion/styled";
 import React from "react";
-import theme, { ThemeType } from "@/styles/theme";
 import { css } from "@emotion/react";
 
-type Props = React.HTMLAttributes<HTMLButtonElement> & CustomProps;
-type CustomProps = {
-    // color: string;
-    color: keyof ThemeType["colors"]["secondary"];
-};
+export interface ButtonProps {
+    color: string;
+    fullWidth: boolean;
+    size: "small" | "medium" | "large";
+    variant: "primary" | "secondary";
+    loading: boolean; // loading 으로 받는데 isLoading 으로 바꿔서 사용할 수 있는 타입 유틸
+    onClick1: () => void;
+    //onClick2: (): void; // 타입스크립트 공변성, 반공변성 => 집합론(수학과 대학원) => 함수형 프로그래밍 => 펑터, 모나드 => Javscript 로 배우는 SICP
+}
 
-// const CustomButton = styled.button<CustomProps>`
-//     background-color: ${(props) => props.color || "#4caf50"};
-//     color: white;
-//     border: none;
-//     padding: 8px 16px;
-//     font-size: 16px;
-//     border-radius: 4px;
-//     cursor: pointer;
-// `;
+type Props = PartialPick<ButtonProps, "variant" | "size"> &
+    React.HTMLAttributes<HTMLButtonElement>;
 
-export default function Button({ children, color, ...props }: Props) {
+type Styled = Required<Pick<Props, "variant">>;
+
+export default function Button({
+    children,
+    color,
+    //variant = "priamry",
+    ...props
+}: React.PropsWithChildren<Props>) {
     return (
         // <CustomButton color={color} {...props}>
         //     {children}
         // </CustomButton>
-        <button
-            css={css`
-                border-radius: 6px;
-                border: 1px solid rgba(27, 31, 36, 0.15);
-                background-color: white;
-                color: ${theme.colors.secondary[color]};
-                font-weight: 600;
-                line-height: 20px;
-                font-size: 14px;
-                padding: 5px 16px;
-                text-align: center;
-                cursor: pointer;
-                appearance: none;
-                user-select: none;
-                transition: background-color 0.3s;
-            `}
-        >
-            {children}
-        </button>
+        <Wrapper variant={"primary"}>{children}</Wrapper>
     );
 }
+
+const Wrapper = styled.button<Styled>`
+    ${({ theme, variant }) => {
+        return theme.colors;
+    }}
+`;

@@ -24,10 +24,12 @@ const theme = {
             medium: "16px",
             large: "20px",
         },
-        fontWeight: {
-            normal: 400,
-            bold: 700,
+        bold1: {
+            size: 400,
+            weight: 700,
+            height: "10px",
         },
+        // size, weight, height
     },
 };
 
