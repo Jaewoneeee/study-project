@@ -9,8 +9,8 @@ const GlobalStyles = () => (
                 margin: 0;
                 padding: 0;
                 box-sizing: border-box;
-                background-color: ${theme.colors.background};
-                color: ${theme.colors.text};
+                background-color: ${theme.colors.neutral[10]};
+                color: ${theme.colors.primary};
                 font-family: ${theme.typography.fontFamily};
             }
             * {

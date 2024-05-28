@@ -1,13 +1,21 @@
 const theme = {
     colors: {
-        primary: "#0070f3",
-        secondary: "#1c1c1e",
-        background: "#333333",
-        text: "#f5f5f5",
-        success: "#28a745",
-        warning: "#ffc107",
-        danger: "#dc3545",
-        info: "#17a2b8",
+        primary: "#000000",
+        secondary: {
+            red: "#FF5630",
+            orange: "#FFAB00",
+            green: "#38CB89",
+            blue: "#377DFF",
+        },
+        neutral: {
+            "10": "#FEFEFE",
+            "20": "#F3F5F7",
+            "30": "#E8ECEF",
+            "40": "#6C7275",
+            "50": "#343839",
+            "60": "#232627",
+            "70": "#141718",
+        },
     },
     typography: {
         fontFamily: "'Arial', sans-serif",

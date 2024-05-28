@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import Layout from "@/components/Layout";
+import Layout from "@/components/layout/Layout";
 import GlobalStyles from "@/styles/globalStyles";
 import { ThemeProvider } from "@emotion/react";
 import theme from "../styles/theme";
