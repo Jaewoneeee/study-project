@@ -33,5 +33,27 @@ const theme = {
     },
 };
 
+const fontSize = {
+    xs: "12px",
+    sm: "14px",
+    base: "16px",
+    lg: "18px",
+    xl: "20px",
+    "2xl": "22px",
+    "4xl": "26px",
+};
+
+const fontWeight = {
+    base: 400,
+    semibold: 600,
+    bold: 700,
+};
+
+const lineHeight = {
+    small: "16px",
+    medium: "24px",
+    large: "32px",
+};
+
 export type ThemeType = typeof theme;
 export default theme;
