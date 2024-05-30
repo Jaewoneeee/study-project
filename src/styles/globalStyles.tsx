@@ -11,7 +11,7 @@ const GlobalStyles = () => (
                 box-sizing: border-box;
                 background-color: ${theme.colors.neutral[10]};
                 color: ${theme.colors.primary};
-                font-family: ${theme.typography.fontFamily};
+                font-family: ${theme.fontFamily};
             }
             * {
                 box-sizing: inherit;
