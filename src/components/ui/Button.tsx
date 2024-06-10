@@ -81,10 +81,16 @@ const disabledStyles = (theme: any) => {
     `;
 };
 
-type Props = PartialPick<ButtonProps, "variant" | "size"> & React.HTMLAttributes<HTMLButtonElement>;
+type Props = PartialPick<ButtonProps, "variant" | "size"> &
+    React.HTMLAttributes<HTMLButtonElement>;
 //type Styled = Required<Pick<Props, "variant" | "size">>; //중복
 
-export default function Button({ children, variant, size, ...props }: React.PropsWithChildren<Props>) {
+export default function Button({
+    children,
+    variant,
+    size,
+    ...props
+}: React.PropsWithChildren<Props>) {
     const handleClick = () => {
         if (!props.isLoading && !props.disabled && props.onClick) {
             props.onClick();
@@ -92,19 +98,25 @@ export default function Button({ children, variant, size, ...props }: React.Prop
     };
 
     return (
-        <Wrapper variant={variant} size={size} onClick={handleClick} {...props}>
+        <ButtonWrapper
+            variant={variant}
+            size={size}
+            onClick={(event) => {}}
+            {...props}
+        >
             {props.isLoading ? " 로딩중..." : children}
-        </Wrapper>
+        </ButtonWrapper>
     );
 }
 
-const Wrapper = styled.button<Props>`
+const ButtonWrapper = styled.button<Props>`
     ${({ theme, size, variant, fullWidth, isLoading, disabled }) => css`
         ${sizeStyles(theme, size)}
         ${variantStyles(theme, variant)}     
         ${fullWidth && `width: 100%;`}   
         ${isLoading && loadingStyles}
         ${disabled && disabledStyles(theme)}
+
 
         border-radius: 8px;
         cursor: pointer;

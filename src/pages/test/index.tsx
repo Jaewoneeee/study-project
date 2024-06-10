@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/ui/Button";
+import Text from "@/components/ui/Text";
 import { useEffect, useState } from "react";
 
 export default function TestPage() {
@@ -36,6 +37,10 @@ export default function TestPage() {
             <Button variant={"green"} size={"xlarge"} disabled>
                 버튼
             </Button>
+
+            <Text as={"span"} size={"xl"}>
+                텍스트
+            </Text>
         </>
     );
 }

@@ -1,3 +1,39 @@
+type TypographyKey = "h1" | "h2" | "h3" | "h4";
+type WeightKey = "bold" | "semobold" | "medium";
+
+const sizeMap: Record<TypographyKey, number> = {
+    h1: 80,
+    h2: 72,
+    h3: 54,
+    h4: 40,
+};
+
+const weightMap: Record<WeightKey, number> = {
+    bold: 700,
+    semibold: 600,
+    medium: 500,
+};
+
+const lineHeightMap: Record<TypographyKey, number> = {
+    h1: 1.6,
+    h2: 1.6,
+    h3: 1.6,
+    h4: 1.6,
+};
+
+const typographySchema: Record<TypographyKey, Array<WeightKey>> = {
+    h1: ["bold"],
+    h2: ["bold"],
+    h3: ["bold"],
+    h4: ["bold", "semobold"],
+};
+
+function generatTypography(shema: typeof typographySchema) {
+    // 샬라샬라
+}
+
+const typo = generatTypography(typographySchema);
+
 const fontSize = {
     xs: "12px",
     sm: "14px",
@@ -75,9 +111,11 @@ const typography = {
         h6: createTypographyStyle("4xl", "medium", "4xl"),
         h7: createTypographyStyle("xl", "medium", "xl"),
     },
-    text_normal: createTextStyles("normal"),
-    text_semibold: createTextStyles("semibold"),
-    text_bold: createTextStyles("bold"),
+    content: {
+        normal: createTextStyles("normal"),
+        semibold: createTextStyles("semibold"),
+        bold: createTextStyles("bold"),
+    },
     button: {
         xsmall: createTypographyStyle("sm", "medium", "base"),
         small: createTypographyStyle("base", "medium", "xl"),
