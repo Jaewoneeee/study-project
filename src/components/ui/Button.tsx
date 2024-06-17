@@ -2,39 +2,39 @@ import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 export interface ButtonProps {
     variant: "default" | "white" | "green" | "blue";
-    size: "xsmall" | "small" | "medium" | "large" | "xlarge";
+    size: "small" | "medium" | "large";
     fullWidth: boolean;
-    isLoading: boolean;
+    loading: boolean;
     disabled: boolean;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onMouseEnter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onMouseLeave: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onFocus: (event: React.FocusEvent<HTMLButtonElement>) => void;
+    onBlur: (event: React.FocusEvent<HTMLButtonElement>) => void;
+    onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+    onKeyUp: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+    onDoubleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => void;
+    onMouseUp: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const sizeStyles = (theme: any, size: string) => {
     switch (size) {
-        case "xsmall":
-            return css`
-                padding: 4px 14px;
-                ${theme.typography.button.xsmall}
-            `;
         case "small":
             return css`
                 padding: 4px 28px;
-                ${theme.typography.button.small}
+                ${theme.typography.body3.semibold}
             `;
         case "large":
             return css`
                 padding: 8px 48px;
-                ${theme.typography.button.large}
+                ${theme.typography.body1.bold}
             `;
-        case "xlarge":
-            return css`
-                padding: 8px 70px;
-                ${theme.typography.button.xlarge}
-            `;
+
         default:
             return css`
                 padding: 6px 42px;
-                ${theme.typography.button.medium}
+                ${theme.typography.body2.normal}
             `;
     }
 };
@@ -81,43 +81,30 @@ const disabledStyles = (theme: any) => {
     `;
 };
 
-type Props = PartialPick<ButtonProps, "variant" | "size"> &
-    React.HTMLAttributes<HTMLButtonElement>;
-//type Styled = Required<Pick<Props, "variant" | "size">>; //중복
+type Props = PartialPick<ButtonProps, "variant" | "size"> & React.HTMLAttributes<HTMLButtonElement>;
 
-export default function Button({
-    children,
-    variant,
-    size,
-    ...props
-}: React.PropsWithChildren<Props>) {
-    const handleClick = () => {
-        if (!props.isLoading && !props.disabled && props.onClick) {
-            props.onClick();
+export default function Button({ children, variant, size, loading, ...props }: React.PropsWithChildren<Props>) {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (!loading && !props.disabled && props.onClick) {
+            console.log(event);
+            props.onClick(event);
         }
     };
 
     return (
-        <ButtonWrapper
-            variant={variant}
-            size={size}
-            onClick={(event) => {}}
-            {...props}
-        >
-            {props.isLoading ? " 로딩중..." : children}
+        <ButtonWrapper variant={variant} size={size} onClick={handleClick} {...props}>
+            {loading ? " 로딩중..." : children}
         </ButtonWrapper>
     );
 }
 
 const ButtonWrapper = styled.button<Props>`
-    ${({ theme, size, variant, fullWidth, isLoading, disabled }) => css`
+    ${({ theme, size, variant, loading, fullWidth, disabled }) => css`
         ${sizeStyles(theme, size)}
         ${variantStyles(theme, variant)}     
-        ${fullWidth && `width: 100%;`}   
-        ${isLoading && loadingStyles}
-        ${disabled && disabledStyles(theme)}
-
-
+        ${fullWidth ? `width: 100%;` : ""}   
+        ${loading ? loadingStyles : ""}
+        ${disabled ? disabledStyles(theme) : ""}
         border-radius: 8px;
         cursor: pointer;
 

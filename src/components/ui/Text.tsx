@@ -8,15 +8,9 @@ export interface TextProps {
     color: string;
 }
 
-type Props = PartialPick<TextProps, "as" | "size"> &
-    React.HTMLAttributes<HTMLElement>;
+type Props = PartialPick<TextProps, "as" | "size"> & React.HTMLAttributes<HTMLElement>;
 
-export default function Text({
-    children,
-    as,
-    size,
-    ...props
-}: React.PropsWithChildren<Props>) {
+export default function Text({ children, as, size, ...props }: React.PropsWithChildren<Props>) {
     // lineClamp
     return (
         <TextWrapper as={as} size={size} {...props}>
@@ -29,6 +23,6 @@ export default function Text({
 // TODO: as로 태그를 어떻게 구분하는게 좋을까?
 const TextWrapper = styled.span<Props>`
     ${({ theme, as, size }) => css`
-        ${theme.typography.content.normal[size]}
+        ${theme.typography.body2}
     `}
 `;

@@ -1,56 +1,21 @@
-type TypographyKey = "h1" | "h2" | "h3" | "h4";
-type WeightKey = "bold" | "semobold" | "medium";
+import { css, SerializedStyles } from "@emotion/react";
+
+type TypographyKey = "h1" | "h2" | "h3" | "h4" | "body1" | "body2" | "body3" | "body4" | "caption";
+type WeightKey = "light" | "normal" | "medium" | "bold" | "semibold";
 
 const sizeMap: Record<TypographyKey, number> = {
-    h1: 80,
-    h2: 72,
-    h3: 54,
-    h4: 40,
+    h1: 72,
+    h2: 48,
+    h3: 36,
+    h4: 30,
+    body1: 20,
+    body2: 18,
+    body3: 16,
+    body4: 14,
+    caption: 12,
 };
 
 const weightMap: Record<WeightKey, number> = {
-    bold: 700,
-    semibold: 600,
-    medium: 500,
-};
-
-const lineHeightMap: Record<TypographyKey, number> = {
-    h1: 1.6,
-    h2: 1.6,
-    h3: 1.6,
-    h4: 1.6,
-};
-
-const typographySchema: Record<TypographyKey, Array<WeightKey>> = {
-    h1: ["bold"],
-    h2: ["bold"],
-    h3: ["bold"],
-    h4: ["bold", "semobold"],
-};
-
-function generatTypography(shema: typeof typographySchema) {
-    // 샬라샬라
-}
-
-const typo = generatTypography(typographySchema);
-
-const fontSize = {
-    xs: "12px",
-    sm: "14px",
-    base: "16px",
-    lg: "18px",
-    xl: "20px",
-    "2xl": "22px",
-    "3xl": "24px",
-    "4xl": "26px",
-    "5xl": "34px",
-    "6xl": "40px",
-    "7xl": "54px",
-    "8xl": "72px",
-    "9xl": "80px",
-};
-
-const fontWeight = {
     light: 300,
     normal: 400,
     medium: 500,
@@ -58,72 +23,55 @@ const fontWeight = {
     bold: 700,
 };
 
-const lineHeight = {
-    xs: "20px",
-    sm: "22px",
-    base: "24px",
-    lg: "26px",
-    xl: "28px",
-    "2xl": "30px",
-    "3xl": "32px",
-    "4xl": "34px",
-    "5xl": "38px",
-    "6xl": "40px",
-    "7xl": "44px",
-    "8xl": "58px",
-    "9xl": "76px",
-    "10xl": "84px",
+const lineHeightMap: Record<TypographyKey, number> = {
+    h1: 1.3,
+    h2: 1.3,
+    h3: 1.3,
+    h4: 1.4,
+    body1: 1.6,
+    body2: 1.6,
+    body3: 1.6,
+    body4: 1.6,
+    caption: 1.6,
 };
 
-type TypographyStyle = {
-    fontSize: string;
-    fontWeight: number;
-    lineHeight: string;
+const typographySchema: Record<TypographyKey, Array<WeightKey>> = {
+    h1: ["semibold"],
+    h2: ["semibold"],
+    h3: ["semibold"],
+    h4: ["semibold"],
+    body1: ["normal", "semibold", "bold"],
+    body2: ["normal", "semibold", "bold"],
+    body3: ["normal", "semibold", "bold"],
+    body4: ["normal", "semibold", "bold"],
+    caption: ["normal", "semibold"],
 };
 
-const createTypographyStyle = (
-    size: keyof typeof fontSize,
-    weight: keyof typeof fontWeight,
-    height: keyof typeof lineHeight
-): TypographyStyle => ({
-    fontSize: fontSize[size],
-    fontWeight: fontWeight[weight],
-    lineHeight: lineHeight[height],
-});
+const generateTypography = (schema: Record<TypographyKey, Array<WeightKey>>) => {
+    const result: Record<TypographyKey, Record<WeightKey, SerializedStyles>> = {} as any;
 
-const createTextStyles = (weight: keyof typeof fontWeight) => ({
-    xs: createTypographyStyle("xs", weight, "xs"),
-    sm: createTypographyStyle("sm", weight, "sm"),
-    base: createTypographyStyle("base", weight, "lg"),
-    lg: createTypographyStyle("lg", weight, "2xl"),
-    xl: createTypographyStyle("xl", weight, "3xl"),
-    "2xl": createTypographyStyle("2xl", weight, "4xl"),
-    "4xl": createTypographyStyle("4xl", weight, "6xl"),
-});
+    Object.keys(schema).forEach((key) => {
+        const typographyKey = key as TypographyKey;
+        result[typographyKey] = {} as Record<WeightKey, SerializedStyles>;
 
-const typography = {
-    title: {
-        h1: createTypographyStyle("9xl", "medium", "10xl"),
-        h2: createTypographyStyle("8xl", "medium", "9xl"),
-        h3: createTypographyStyle("7xl", "medium", "8xl"),
-        h4: createTypographyStyle("6xl", "medium", "7xl"),
-        h5: createTypographyStyle("5xl", "medium", "5xl"),
-        h6: createTypographyStyle("4xl", "medium", "4xl"),
-        h7: createTypographyStyle("xl", "medium", "xl"),
-    },
-    content: {
-        normal: createTextStyles("normal"),
-        semibold: createTextStyles("semibold"),
-        bold: createTextStyles("bold"),
-    },
-    button: {
-        xsmall: createTypographyStyle("sm", "medium", "base"),
-        small: createTypographyStyle("base", "medium", "xl"),
-        medium: createTypographyStyle("lg", "medium", "3xl"),
-        large: createTypographyStyle("2xl", "medium", "4xl"),
-        xlarge: createTypographyStyle("4xl", "medium", "5xl"),
-    },
+        schema[typographyKey].forEach((weight) => {
+            const fontSize = `${sizeMap[typographyKey]}px`;
+            const fontWeight = weightMap[weight];
+            const lineHeight = `${lineHeightMap[typographyKey]}`;
+
+            result[typographyKey][weight] = css`
+                font-size: ${fontSize};
+                font-weight: ${fontWeight};
+                line-height: ${lineHeight};
+            `;
+        });
+    });
+
+    return result;
 };
+
+const typography = generateTypography(typographySchema);
+//console.log("🚀 ~ typo:", typography);
 
 const theme = {
     colors: {

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 import { useEffect, useState } from "react";
@@ -11,36 +12,40 @@ export default function TestPage() {
         setCount(count + 1);
     };
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLoadingTest(false);
-        }, 3000);
-    }, []);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+
+    const handleClick = () => {
+        if (buttonRef.current) {
+            buttonRef.current.focus();
+        }
+    };
 
     return (
         <>
             <div>테스트 메인 페이지</div>
-
-            <Button variant={"green"} size={"xsmall"} onClick={plusCount}>
+            <Button variant={"green"} size={"small"} onClick={plusCount}>
                 {count}
             </Button>
             <Button variant={"blue"} size={"small"}>
                 버튼
             </Button>
-            <Button variant={"default"} size={"medium"} isLoading={loadingTest}>
+            <Button variant={"default"} size={"medium"} loading={loadingTest}>
                 버튼
             </Button>
             <Button variant={"white"} size={"large"} fullWidth>
                 버튼
             </Button>
-
-            <Button variant={"green"} size={"xlarge"} disabled>
+            <Button variant={"green"} size={"large"} disabled>
                 버튼
             </Button>
 
-            <Text as={"span"} size={"xl"}>
+            <div>
+                <button ref={buttonRef}>Click Me</button>
+                <button onClick={handleClick}>Focus the other button</button>
+            </div>
+            {/* <Text as={"span"} size={"xl"}>
                 텍스트
-            </Text>
+            </Text> */}
         </>
     );
 }
