@@ -7,6 +7,7 @@ export interface ButtonProps {
     fullWidth: boolean;
     loading: boolean;
     disabled: boolean;
+    //onClick: (target:any) => ..
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
     onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
     onKeyUp: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
@@ -81,10 +82,17 @@ const disabledStyles = (theme: any) => {
     `;
 };
 
-type Props = PartialPick<ButtonProps, "variant" | "size"> & React.HTMLAttributes<HTMLButtonElement>;
+type Props = PartialPick<ButtonProps, "variant" | "size"> &
+    React.HTMLAttributes<HTMLButtonElement>;
 
 const Button = forwardRef<HTMLButtonElement, Props>(function Button(
-    { children, variant, size, loading, ...props }: React.PropsWithChildren<Props>,
+    {
+        children,
+        variant,
+        size,
+        loading,
+        ...props
+    }: React.PropsWithChildren<Props>,
     ref
 ) {
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -106,9 +114,14 @@ const Button = forwardRef<HTMLButtonElement, Props>(function Button(
             variant={variant}
             size={size}
             ref={ref}
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
+            // onClick={handleClick}
+            // onKeyDown={handleKeyDown}
+            // onKeyUp={handleKeyUp}
+            // TODO: 채우기
+            // onClick={(event) => {
+            //     props.onClick(event.target.)
+            // }}
+            // TODO: 여기 순서 바꿔보기
             {...props}
         >
             {loading ? "로딩중..." : children}

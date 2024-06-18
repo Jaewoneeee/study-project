@@ -1,6 +1,15 @@
 import { css, SerializedStyles } from "@emotion/react";
 
-export type TypographyKey = "h1" | "h2" | "h3" | "h4" | "body1" | "body2" | "body3" | "body4" | "caption";
+export type TypographyKey =
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "body1"
+    | "body2"
+    | "body3"
+    | "body4"
+    | "caption";
 export type WeightKey = "light" | "normal" | "medium" | "bold" | "semibold";
 
 const sizeMap: Record<TypographyKey, number> = {
@@ -47,8 +56,17 @@ const typographySchema: Record<TypographyKey, Array<WeightKey>> = {
     caption: ["normal", "semibold"],
 };
 
-const generateTypography = (schema: Record<TypographyKey, Array<WeightKey>>) => {
-    const result: Record<TypographyKey, Record<WeightKey, SerializedStyles>> = {} as any;
+function gernerateTypoString() {
+    return css``;
+}
+
+const generateTypography = (
+    schema: Record<TypographyKey, Array<WeightKey>>
+) => {
+    const result: Record<
+        TypographyKey,
+        Record<WeightKey, SerializedStyles>
+    > = {} as any;
 
     Object.keys(schema).forEach((key) => {
         const typographyKey = key as TypographyKey;
@@ -73,28 +91,68 @@ const generateTypography = (schema: Record<TypographyKey, Array<WeightKey>>) => 
 const typography = generateTypography(typographySchema);
 console.log("🚀 ~ typo:", typography);
 
-const theme = {
-    colors: {
-        primary: "#000000",
-        secondary: {
-            red: "#FF5630",
-            orange: "#FFAB00",
-            green: "#38CB89",
-            blue: "#377DFF",
-        },
-        neutral: {
-            "10": "#FEFEFE",
-            "20": "#F3F5F7",
-            "30": "#E8ECEF",
-            "40": "#6C7275",
-            "50": "#343839",
-            "60": "#232627",
-            "70": "#141718",
+const colors = {
+    primary: "#000000",
+    secondary: {
+        red: "#FF5630",
+        orange: "#FFAB00",
+        green: "#38CB89",
+        blue: "#377DFF",
+    },
+    neutral: {
+        "10": "#FEFEFE",
+        "20": "#F3F5F7",
+        "30": "#E8ECEF",
+        "40": "#6C7275",
+        "50": "#343839",
+        "60": "#232627",
+        "70": "#141718",
+        warning: {
+            10: "#fff",
         },
     },
+};
+
+const theme = {
+    colors,
     fontFamily: "'Arial', sans-serif",
     typography,
 };
 
+// <Text color="secondary.red" />
+
 export type ThemeType = typeof theme;
 export default theme;
+
+type Colors = typeof colors;
+
+/**
+ * @example
+ * ```ts
+ * type Colors = {
+ *   a:{ b: c: string }
+ * }
+ *
+ * type Result = SpreadObjectKey<Colors>
+ * // 'a.b.c' => ok
+ * // 'a.b' => x
+ * ```
+ */
+
+// 1. K extends keyof T
+// 2. K = keyof T
+// 3. K extends keyof T = keyof T
+// 4. 아래 타입 명세서 작성
+type SpreadObjectKey<
+    T,
+    S extends string = "",
+    K extends keyof T = keyof T
+> = K extends string | number
+    ? T[K] extends string | number
+        ? `${S}${K}`
+        : T[K] extends object
+        ? SpreadObjectKey<T[K], `${S}${K}.`>
+        : never
+    : never;
+
+type ColorKey = SpreadObjectKey<Colors>;
