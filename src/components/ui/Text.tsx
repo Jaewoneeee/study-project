@@ -1,28 +1,55 @@
+import React, { ComponentPropsWithoutRef, ElementType, Ref, forwardRef } from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
+import { TypographyKey, WeightKey } from "@/styles/theme";
 
-export interface TextProps {
-    as: "span" | "p" | "div";
-    size: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "4xl";
-    bold: "normal" | "semibold" | "bold";
-    color: string;
-}
+export type Combine<T, K> = T & Omit<K, keyof T>;
 
-type Props = PartialPick<TextProps, "as" | "size"> & React.HTMLAttributes<HTMLElement>;
+export type CombineElementProps<T extends ElementType, K = unknown> = Combine<K, ComponentPropsWithoutRef<T>>;
 
-export default function Text({ children, as, size, ...props }: React.PropsWithChildren<Props>) {
-    // lineClamp
+type OverridableProps<T extends ElementType, K = unknown> = {
+    as?: T;
+} & CombineElementProps<T, K>;
+
+type TextBaseProps = {
+    typography?: string;
+};
+
+type TextStylesProps = {
+    typo: TypographyKey;
+    weight: WeightKey;
+    color?: string;
+};
+
+type TextProps<T extends ElementType> = OverridableProps<T, TextBaseProps & TextStylesProps>;
+
+function Text<T extends ElementType = "span">(
+    { children, as, typo, weight, color = "black", ...props }: React.PropsWithChildren<TextProps<T>>,
+    ref: Ref<any>
+) {
+    const target = as ?? "span";
+    const Component = target;
+
     return (
-        <TextWrapper as={as} size={size} {...props}>
+        <TextWrapper as={Component} typo={typo} weight={weight} color={color} ref={ref} {...props}>
             {children}
         </TextWrapper>
     );
 }
 
-// TODO: title / content를 어떻게 구분하지?
-// TODO: as로 태그를 어떻게 구분하는게 좋을까?
-const TextWrapper = styled.span<Props>`
-    ${({ theme, as, size }) => css`
-        ${theme.typography.body2}
+export default forwardRef(Text) as typeof Text;
+
+const TextWrapper = styled.span<TextProps<any>>`
+    ${({ theme, typo, weight, color }) => css`
+        ${theme.typography[typo][weight]}
+        color: ${color};
+
+        /* overflow: hidden; */
+        text-overflow: ellipsis;
+        /* white-space: nowrap; */
+        text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Number of lines to clamp */
+        -webkit-box-orient: vertical;
     `}
 `;

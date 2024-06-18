@@ -1,7 +1,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 
-type TypographyKey = "h1" | "h2" | "h3" | "h4" | "body1" | "body2" | "body3" | "body4" | "caption";
-type WeightKey = "light" | "normal" | "medium" | "bold" | "semibold";
+export type TypographyKey = "h1" | "h2" | "h3" | "h4" | "body1" | "body2" | "body3" | "body4" | "caption";
+export type WeightKey = "light" | "normal" | "medium" | "bold" | "semibold";
 
 const sizeMap: Record<TypographyKey, number> = {
     h1: 72,
@@ -71,7 +71,7 @@ const generateTypography = (schema: Record<TypographyKey, Array<WeightKey>>) => 
 };
 
 const typography = generateTypography(typographySchema);
-//console.log("🚀 ~ typo:", typography);
+console.log("🚀 ~ typo:", typography);
 
 const theme = {
     colors: {

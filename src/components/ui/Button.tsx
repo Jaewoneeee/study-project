@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
+import { forwardRef } from "react";
 export interface ButtonProps {
     variant: "default" | "white" | "green" | "blue";
     size: "small" | "medium" | "large";
@@ -7,33 +8,32 @@ export interface ButtonProps {
     loading: boolean;
     disabled: boolean;
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    onMouseEnter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    onMouseLeave: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    onFocus: (event: React.FocusEvent<HTMLButtonElement>) => void;
-    onBlur: (event: React.FocusEvent<HTMLButtonElement>) => void;
     onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
     onKeyUp: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
-    onDoubleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    onMouseUp: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const sizeStyles = (theme: any, size: string) => {
     switch (size) {
         case "small":
             return css`
-                padding: 4px 28px;
+                width: 77px;
+                height: 32px;
+                padding: 4px 20px;
                 ${theme.typography.body3.semibold}
             `;
         case "large":
             return css`
-                padding: 8px 48px;
+                width: 147px;
+                height: 56px;
+                padding: 8px 50px;
                 ${theme.typography.body1.bold}
             `;
 
         default:
             return css`
-                padding: 6px 42px;
+                width: 114px;
+                height: 46px;
+                padding: 6px 36px;
                 ${theme.typography.body2.normal}
             `;
     }
@@ -83,20 +83,40 @@ const disabledStyles = (theme: any) => {
 
 type Props = PartialPick<ButtonProps, "variant" | "size"> & React.HTMLAttributes<HTMLButtonElement>;
 
-export default function Button({ children, variant, size, loading, ...props }: React.PropsWithChildren<Props>) {
+const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+    { children, variant, size, loading, ...props }: React.PropsWithChildren<Props>,
+    ref
+) {
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        if (!loading && !props.disabled && props.onClick) {
-            console.log(event);
-            props.onClick(event);
-        }
+        console.log("Button Clicked");
+        console.log(event);
+    };
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        console.log("Button KeyDown");
+        console.log(event);
+    };
+
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        console.log("Button KeyUp");
+        console.log(event);
     };
 
     return (
-        <ButtonWrapper variant={variant} size={size} onClick={handleClick} {...props}>
-            {loading ? " 로딩중..." : children}
+        <ButtonWrapper
+            variant={variant}
+            size={size}
+            ref={ref}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            {...props}
+        >
+            {loading ? "로딩중..." : children}
         </ButtonWrapper>
     );
-}
+});
+
+export default Button;
 
 const ButtonWrapper = styled.button<Props>`
     ${({ theme, size, variant, loading, fullWidth, disabled }) => css`
@@ -107,6 +127,9 @@ const ButtonWrapper = styled.button<Props>`
         ${disabled ? disabledStyles(theme) : ""}
         border-radius: 8px;
         cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
         &:not(:disabled) {
             &:hover {
