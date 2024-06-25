@@ -1,15 +1,6 @@
 import { css, SerializedStyles } from "@emotion/react";
 
-export type TypographyKey =
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "body1"
-    | "body2"
-    | "body3"
-    | "body4"
-    | "caption";
+export type TypographyKey = "h1" | "h2" | "h3" | "h4" | "body1" | "body2" | "body3" | "body4" | "caption";
 export type WeightKey = "light" | "normal" | "medium" | "bold" | "semibold";
 
 const sizeMap: Record<TypographyKey, number> = {
@@ -60,13 +51,8 @@ function gernerateTypoString() {
     return css``;
 }
 
-const generateTypography = (
-    schema: Record<TypographyKey, Array<WeightKey>>
-) => {
-    const result: Record<
-        TypographyKey,
-        Record<WeightKey, SerializedStyles>
-    > = {} as any;
+const generateTypography = (schema: Record<TypographyKey, Array<WeightKey>>) => {
+    const result: Record<TypographyKey, Record<WeightKey, SerializedStyles>> = {} as any;
 
     Object.keys(schema).forEach((key) => {
         const typographyKey = key as TypographyKey;
@@ -109,6 +95,11 @@ const colors = {
         "70": "#141718",
         warning: {
             10: "#fff",
+            20: "#fff",
+            test: {
+                10: "#aaa",
+                20: "#f0d9b0",
+            },
         },
     },
 };
@@ -139,15 +130,31 @@ type Colors = typeof colors;
  * ```
  */
 
-// 1. K extends keyof T
-// 2. K = keyof T
-// 3. K extends keyof T = keyof T
-// 4. 아래 타입 명세서 작성
-type SpreadObjectKey<
-    T,
-    S extends string = "",
-    K extends keyof T = keyof T
-> = K extends string | number
+/**
+ * @description 1. K extends keyof T
+ *  - K는 T의 키값 중 하나여야한다(제약조건, K를 명시적으로 지정)
+ *
+ * @description 2. K = keyof T
+ *  - K의 기본값은 T의 키값이다(제약조건 X)
+ *
+ * @description 3. K extends keyof T = keyof T
+ *  - K의 기본값은 T이며, K를 명시적으로 지정하더라도 K는 T의 키값 중 하나여야한다
+ *
+ * @description 4. 아래 타입 명세서 작성
+ *  1. 정의
+ *      - 객체의 키를 재귀적으로 연결하여 '.'으로 구분된 문자열로 변환하는 타입
+ *  2. 매개변수
+ *      - T: 객체
+ *      - S: 문자열, 기본값은 ""
+ *      - K: T의 키값, ( = keyof T 를 통해 명시하지 않아도 된다)
+ *  3. 동작
+ *      - K가 문자열 또는 숫자여야 한다
+ *      - T[K]가 문자열 또는 숫자일 경우, `${S}${K}`를 반환한다
+ *      - T[K]가 객체일 경우, 두번째 매개변수로 `${S}${K}.`값을 주며 재귀적으로 SpreadObjectKey를 호출한다
+ *      - 위의 조건에 해당하지 않으면 never 타입을 반환한다
+ * */
+
+type SpreadObjectKey<T, S extends string = "", K extends keyof T = keyof T> = K extends string | number
     ? T[K] extends string | number
         ? `${S}${K}`
         : T[K] extends object
